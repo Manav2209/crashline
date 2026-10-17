@@ -1,0 +1,21 @@
+{
+  "name": "crashline", "private": true, "type": "module", "packageManager": "bun@1.4.2",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "turbo run dev", "build": "turbo run build", "typecheck": "turbo run typecheck && tsc --noEmit",
+    "test": "bun test tests", "check:functions": "bun scripts/check-functions.ts",
+    "db:generate": "bun run --cwd packages/db db:generate",
+    "db:validate": "bun run --cwd packages/db db:validate",
+    "db:migrate": "bun run --cwd packages/db db:migrate",
+    "db:deploy": "bun run --cwd packages/db db:deploy",
+    "db:seed": "bun run --cwd packages/db db:seed",
+    "security:live": "bun --env-file=.env scripts/security-live.ts",
+    "security:policy-live": "bun --env-file=.env scripts/security-policy-live.ts",
+    "env:setup": "bun scripts/setup-env.ts",
+    "voice:preview": "bun run --cwd apps/voice-agent configure",
+    "voice:configure": "bun run --cwd apps/voice-agent configure --apply",
+    "armoriq:register": "bun --env-file=.env apps/orchestrator/scripts/register-mcp.ts",
+    "armoriq:check": "bun --env-file=.env scripts/armoriq-check.ts"
+  },
+  "devDependencies": {"turbo": "2.5.6", "typescript": "5.9.3", "@types/bun": "1.3.0", "@types/express": "5.0.3", "@modelcontextprotocol/sdk": "1.32.1"}
+}

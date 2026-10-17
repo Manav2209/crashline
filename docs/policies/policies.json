@@ -1,0 +1,73 @@
+{
+  "version": "1.0",
+  "preparedAt": "2026-10-16",
+  "issuer": "CrashLine Demo Insurance (fictional)",
+  "notice": "FICTIONAL DEMO DOCUMENT. Synthetic identities and policy terms only. This document does not create insurance coverage, authorize a payment, or replace review by a human insurance professional.",
+  "policies": [
+    {
+      "id": "POL-1001",
+      "title": "Collision and third-party liability",
+      "holderId": "DEMO-001",
+      "holderName": "Alex Morgan",
+      "holderEmail": "alex@example.test",
+      "status": "ACTIVE",
+      "effectiveFrom": "2026-01-01T00:00:00Z",
+      "effectiveTo": "2027-01-01T00:00:00Z",
+      "currency": "USD",
+      "deductible": 500,
+      "coverages": [
+        {"name": "Collision damage subject to policy terms", "limit": 25000, "description": "Potentially relevant to reported damage to the insured vehicle following a collision. The incident facts and applicable terms still require human review."},
+        {"name": "Third-party liability subject to policy terms", "limit": 100000, "description": "Potentially relevant to a reported third-party liability claim. This document does not determine whether liability exists or who was at fault."}
+      ],
+      "exclusions": ["Intentional damage", "Use outside the permitted vehicle class"],
+      "unknowns": ["Insured vehicle details and permitted vehicle class are not specified in the seeded policy.", "Deductible applicability by coverage, limit aggregation, and any other endorsements are not specified.", "Premium, payment history, jurisdiction, and claims contact details are not specified."],
+      "connection": "seeded-policy-reference",
+      "source": "Matches the policy created for POL-1001 by packages/db/src/seed.ts when the database is freshly seeded. The seed does not overwrite an existing policy record.",
+      "reviewNotes": "For a reported collision on 15 October 2026, the reported date lies within the displayed effective timestamps. Collision coverage may be relevant, subject to human review; no automatic coverage or payment decision follows.",
+      "filename": "POL-1001-active-collision-policy"
+    },
+    {
+      "id": "POL-1002",
+      "title": "Expired collision policy",
+      "holderId": "DEMO-002",
+      "holderName": "Jordan Lee",
+      "holderEmail": "jordan@example.test",
+      "status": "INACTIVE",
+      "effectiveFrom": "2025-01-01T00:00:00Z",
+      "effectiveTo": "2026-01-01T00:00:00Z",
+      "currency": "USD",
+      "deductible": 750,
+      "coverages": [
+        {"name": "Collision damage subject to policy terms", "limit": 20000, "description": "A fictional collision coverage entry for the stated historical policy period. Its presence does not establish coverage for an incident outside that period."},
+        {"name": "Third-party liability subject to policy terms", "limit": 75000, "description": "A fictional liability coverage entry for the stated historical policy period. No liability or fault determination is made."}
+      ],
+      "exclusions": ["Intentional damage", "Use outside the permitted vehicle class"],
+      "unknowns": ["Any renewal, replacement policy, or extension after the displayed end timestamp is unknown.", "Insured vehicle details, permitted vehicle class, deductible applicability, and endorsements are not specified.", "Premium, payment history, jurisdiction, and claims contact details are not specified."],
+      "connection": "document-example-only",
+      "source": "Authored synthetic example. This policy and customer are not seeded in the application and cannot be selected in the current intake flow.",
+      "reviewNotes": "A reported incident on 15 October 2026 would fall after the displayed policy end timestamp. Flag the date mismatch and request human review of any renewal evidence; do not state a binding denial.",
+      "filename": "POL-1002-expired-policy"
+    },
+    {
+      "id": "POL-1003",
+      "title": "Third-party liability only",
+      "holderId": "DEMO-003",
+      "holderName": "Sam Rivera",
+      "holderEmail": "sam@example.test",
+      "status": "ACTIVE",
+      "effectiveFrom": "2026-01-01T00:00:00Z",
+      "effectiveTo": "2027-01-01T00:00:00Z",
+      "currency": "USD",
+      "deductible": 0,
+      "coverages": [
+        {"name": "Third-party liability subject to policy terms", "limit": 100000, "description": "The only coverage listed in this fictional example. It does not establish legal liability or guarantee payment to another party."}
+      ],
+      "exclusions": ["Intentional damage", "Use outside the permitted vehicle class"],
+      "unknowns": ["No own-vehicle collision coverage is listed. Do not infer it from another policy or from the caller's request.", "Insured vehicle details, permitted vehicle class, limit aggregation, and endorsements are not specified.", "Premium, payment history, jurisdiction, and claims contact details are not specified."],
+      "connection": "document-example-only",
+      "source": "Authored synthetic example. This policy and customer are not seeded in the application and cannot be selected in the current intake flow.",
+      "reviewNotes": "For a caller reporting damage to their own vehicle, identify that collision coverage is absent from the listed coverages. Request a human review of the complete policy rather than promising repair reimbursement. The USD 0 deductible is a fictional field value for this example only.",
+      "filename": "POL-1003-third-party-only-policy"
+    }
+  ]
+}

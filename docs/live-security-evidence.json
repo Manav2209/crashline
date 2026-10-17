@@ -1,0 +1,114 @@
+{
+  "createdAt": "2026-10-17T02:31:35.765Z",
+  "source": "live @armoriq/sdk + remote proxy + insurance-mcp",
+  "claimId": "b8ad98d3-dacd-46a5-978e-131fb2cbd023",
+  "runId": "89609416-c8fb-4028-b8a5-14c8a23ef7a5",
+  "reportId": "514ea49b-9876-4264-9675-e5b156b46e05",
+  "idempotentDraft": true,
+  "allowed": [
+    {
+      "mcpTool": "claims.create_draft",
+      "agentType": "INTAKE",
+      "planHash": "1527669d5f10f1f157e5ba95b0878b00695a2a5362a6d8b8f325e14442977d92",
+      "armorPlanId": "91cf07f7-b3ea-4ce6-a697-5b459f27b222",
+      "armorTraceId": null,
+      "enforcementSource": "ARMORIQ_PROXY",
+      "executed": true
+    },
+    {
+      "mcpTool": "claims.create_draft",
+      "agentType": "INTAKE",
+      "planHash": "9ab2492de4b20be0016cd0f83d5dd094f4e02014a7643594f4e616aa08a96a32",
+      "armorPlanId": "42f715c2-a947-405a-afdc-c9301c57c922",
+      "armorTraceId": null,
+      "enforcementSource": "ARMORIQ_PROXY",
+      "executed": true
+    },
+    {
+      "mcpTool": "claims.submit_fnol",
+      "agentType": "INTAKE",
+      "planHash": "6867152154449f1b88c39f39bcd1eb423f4a0e516f014b023efa47a850045d97",
+      "armorPlanId": "b47bb037-efe1-428f-bed7-cd9c82f5a218",
+      "armorTraceId": null,
+      "enforcementSource": "ARMORIQ_PROXY",
+      "executed": true
+    },
+    {
+      "mcpTool": "claims.get_details",
+      "agentType": "INVESTIGATOR",
+      "planHash": "456cb8b4badbcc21fd47c404439f99276262e1f28fddaeddf21783ea2de3527b",
+      "armorPlanId": "a8d7360f-50c0-46e1-80f9-d9ee0047df98",
+      "armorTraceId": null,
+      "enforcementSource": "ARMORIQ_PROXY",
+      "executed": true
+    },
+    {
+      "mcpTool": "policy.get_details",
+      "agentType": "POLICY_AGENT",
+      "planHash": "5209dac7b9859959a5ccbed77d5ee0cb7e9406b3daf290275b04fa80080c3d35",
+      "armorPlanId": "a081c3b0-e4ec-4e73-8f2f-8ce5fb92a064",
+      "armorTraceId": null,
+      "enforcementSource": "ARMORIQ_PROXY",
+      "executed": true
+    },
+    {
+      "mcpTool": "claims.get_intake_requirements",
+      "agentType": "INVESTIGATOR",
+      "planHash": "cf3c89cadce001f7aaacdcef48ab45a155b992b0501b3b31a9b5882db3736492",
+      "armorPlanId": "2b0ee0f9-e4ce-48af-8758-36d481df8732",
+      "armorTraceId": null,
+      "enforcementSource": "ARMORIQ_PROXY",
+      "executed": true
+    },
+    {
+      "mcpTool": "claims.save_report",
+      "agentType": "ORCHESTRATOR",
+      "planHash": "7d602082ffb4362b17be944946a4122127386d9531ca50f92a2a0f7a4c5536da",
+      "armorPlanId": "72b92e6a-fe62-45eb-9fb2-a6a1f5496214",
+      "armorTraceId": null,
+      "enforcementSource": "ARMORIQ_PROXY",
+      "executed": true
+    },
+    {
+      "mcpTool": "policy.get_coverage_rules",
+      "agentType": "POLICY_AGENT",
+      "planHash": "bcb4ece9f3f892e1aab44d502ec0d093248db08539030ebbb4fffe50324f0b80",
+      "armorPlanId": "f6502616-2e20-43d0-b123-42d634a2d92f",
+      "armorTraceId": null,
+      "enforcementSource": "ARMORIQ_PROXY",
+      "executed": true
+    }
+  ],
+  "blocks": [
+    {
+      "tool": "claims.approve_settlement",
+      "role": "INVESTIGATOR",
+      "decision": "BLOCK",
+      "source": "ARMORIQ_SDK_PLAN",
+      "reason": "ArmorIQ SDK plan enforcement: Action 'claims__approve_settlement' not found in the original plan. Plan contains actions: [\"claims__get_details\",\"claims__get_intake_requirements\"]. You can only invoke actions that were included in the plan when you called capturePlan().",
+      "planHash": "411d556edd463b32d903b08714b0500fd7b482890752412b44a8b707afa219b1",
+      "planId": "39d3ed07-ca37-4025-a2d4-7abc48f81853",
+      "handlerInvocations": 0
+    },
+    {
+      "tool": "policy.change_coverage",
+      "role": "POLICY_AGENT",
+      "decision": "BLOCK",
+      "source": "ARMORIQ_SDK_PLAN",
+      "reason": "ArmorIQ SDK plan enforcement: Action 'policy__change_coverage' not found in the original plan. Plan contains actions: [\"policy__get_details\",\"policy__get_coverage_rules\"]. You can only invoke actions that were included in the plan when you called capturePlan().",
+      "planHash": "1367a8e1ad6912f6e43898d02a1a185178740e30575957622b7593d54858a8d8",
+      "planId": "6b979c91-3c71-4bdf-9273-5bf745052ffc",
+      "handlerInvocations": 0
+    },
+    {
+      "tool": "claims.get_details",
+      "role": "POLICY_AGENT",
+      "decision": "BLOCK",
+      "source": "ARMORIQ_SDK_PLAN",
+      "reason": "ArmorIQ SDK plan enforcement: Action 'claims__get_details' not found in the original plan. Plan contains actions: [\"policy__get_details\",\"policy__get_coverage_rules\"]. You can only invoke actions that were included in the plan when you called capturePlan().",
+      "planHash": "1367a8e1ad6912f6e43898d02a1a185178740e30575957622b7593d54858a8d8",
+      "planId": "53957f46-e059-41d8-9260-fc45dccc46c3",
+      "handlerInvocations": 0
+    }
+  ]
+}

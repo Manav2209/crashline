@@ -1,0 +1,12 @@
+{
+  "name": "@crashline/db", "private": true, "type": "module", "exports": "./src/index.ts",
+  "scripts": {
+    "build": "tsc --noEmit", "typecheck": "tsc --noEmit",
+    "db:generate": "bun --env-file=../../.env x prisma generate",
+    "db:validate": "bun --env-file=../../.env x prisma validate",
+    "db:migrate": "bun --env-file=../../.env x prisma migrate dev",
+    "db:deploy": "bun --env-file=../../.env x prisma migrate deploy",
+    "db:seed": "bun --env-file=../../.env src/seed.ts"
+  },
+  "dependencies": {"@prisma/client": "6.19.0"}, "devDependencies": {"prisma": "6.19.0"}
+}

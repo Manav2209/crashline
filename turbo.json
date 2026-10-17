@@ -1,0 +1,10 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": [".env"],
+  "tasks": {
+    "dev": {"cache": false, "persistent": true},
+    "build": {"dependsOn": ["^build"], "outputs": []},
+    "@crashline/web#build": {"dependsOn": ["^build"], "outputs": ["dist/**"]},
+    "typecheck": {"dependsOn": ["^typecheck"]}
+  }
+}

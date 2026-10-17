@@ -1,0 +1,4 @@
+{
+  "name": "@crashline/voice-agent", "private": true, "type": "module",
+  "scripts": {"configure": "bun --env-file=../../.env scripts/configure.ts", "build": "tsc --noEmit", "typecheck": "tsc --noEmit"}
+}

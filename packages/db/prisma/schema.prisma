@@ -1,0 +1,207 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ClaimStatus {
+  DRAFT
+  SUBMITTED
+  INVESTIGATING
+  PENDING_HUMAN_REVIEW
+  INVESTIGATION_FAILED
+}
+
+enum RunStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  PARTIAL
+  FAILED
+}
+
+model DemoUser {
+  id          String @id
+  displayName String
+  email       String @unique
+  policies    Policy[]
+  claims      Claim[]
+  sessions    IntakeSession[]
+}
+
+model Policy {
+  id             String @id
+  holderId       String
+  holder         DemoUser @relation(fields: [holderId], references: [id])
+  status         String
+  effectiveFrom  DateTime
+  effectiveTo    DateTime
+  coveragesJson  Json
+  exclusionsJson Json
+  deductible     Decimal @db.Decimal(12, 2)
+  limitsJson     Json
+  claims         Claim[]
+  sessions       IntakeSession[]
+}
+
+model Claim {
+  id                 String @id @default(uuid())
+  policyId           String
+  policy             Policy @relation(fields: [policyId], references: [id])
+  userId             String
+  user               DemoUser @relation(fields: [userId], references: [id])
+  status             ClaimStatus @default(DRAFT)
+  incidentAt         DateTime?
+  location           String?
+  description        String?
+  injuryStatus       String @default("unknown")
+  otherPartyInvolved Boolean?
+  policeReportNumber String?
+  submittedAt        DateTime?
+  version            Int @default(1)
+  seeded             Boolean @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  sessions           IntakeSession[]
+  runs               InvestigationRun[]
+  reports            InvestigationReport[]
+  attempts           ToolAttempt[]
+  events             ActivityEvent[]
+  @@index([status])
+  @@index([userId, createdAt])
+}
+
+model IntakeSession {
+  id                       String @id @default(uuid())
+  userId                   String
+  user                     DemoUser @relation(fields: [userId], references: [id])
+  policyId                 String
+  policy                   Policy @relation(fields: [policyId], references: [id])
+  claimId                  String?
+  claim                    Claim? @relation(fields: [claimId], references: [id])
+  providerConversationId   String? @unique
+  status                   String @default("ACTIVE")
+  sessionTokenHash         String @unique
+  expiresAt                DateTime
+  confirmedAt              DateTime?
+  confirmationClaimVersion Int?
+  confirmationText         String?
+  transcriptSummary        String?
+  createdAt                DateTime @default(now())
+  attempts                 ToolAttempt[]
+  @@index([claimId])
+}
+
+model InvestigationRun {
+  id                 String @id @default(uuid())
+  claimId            String
+  claim              Claim @relation(fields: [claimId], references: [id])
+  claimVersion       Int
+  status             RunStatus @default(QUEUED)
+  policyAgentStatus  String @default("QUEUED")
+  investigatorStatus String @default("QUEUED")
+  attempt            Int @default(0)
+  leaseUntil         DateTime?
+  leaseOwner         String?
+  startedAt          DateTime?
+  finishedAt         DateTime?
+  error              String?
+  createdAt          DateTime @default(now())
+  findings           AgentFinding[]
+  report             InvestigationReport?
+  attempts           ToolAttempt[]
+  events             ActivityEvent[]
+  @@unique([claimId, claimVersion])
+  @@index([claimId])
+  @@index([status, leaseUntil])
+}
+
+model AgentFinding {
+  id          String @id @default(uuid())
+  runId       String
+  run         InvestigationRun @relation(fields: [runId], references: [id])
+  agentType   String
+  payloadJson Json
+  model       String
+  createdAt   DateTime @default(now())
+  @@unique([runId, agentType])
+}
+
+model InvestigationReport {
+  id                     String @id @default(uuid())
+  claimId                String
+  claim                  Claim @relation(fields: [claimId], references: [id])
+  runId                  String @unique
+  run                    InvestigationRun @relation(fields: [runId], references: [id])
+  summary                String
+  coverageReviewJson     Json?
+  incidentReviewJson     Json?
+  missingInformationJson Json
+  recommendation         String
+  partial                Boolean
+  createdAt              DateTime @default(now())
+}
+
+model ToolAttempt {
+  id           String @id @default(uuid())
+  operationId  String
+  claimId      String?
+  claim        Claim? @relation(fields: [claimId], references: [id])
+  runId        String?
+  run          InvestigationRun? @relation(fields: [runId], references: [id])
+  sessionId    String?
+  session      IntakeSession? @relation(fields: [sessionId], references: [id])
+  agentType    String
+  mcpTool      String
+  requestJson  Json
+  decision     String
+  reason       String
+  executed     Boolean @default(false)
+  armorTraceId String?
+  armorPlanId String?
+  enforcementSource String?
+  resultStatus String @default("NOT_EXECUTED")
+  mcpInvoked Boolean @default(false)
+  planHash     String?
+  correlationId String
+  createdAt    DateTime @default(now())
+  @@index([runId])
+  @@index([claimId, createdAt])
+  @@index([sessionId])
+  @@index([operationId])
+}
+
+model ActivityEvent {
+  id          String @id @default(uuid())
+  claimId     String?
+  claim       Claim? @relation(fields: [claimId], references: [id])
+  runId       String?
+  run         InvestigationRun? @relation(fields: [runId], references: [id])
+  eventType   String
+  payloadJson Json
+  createdAt   DateTime @default(now())
+  @@index([claimId, createdAt, id])
+}
+
+// Real handler receipts also provide evidence that denied tools were never invoked.
+model ToolExecution {
+  operationId  String @id
+  tool         String
+  requestHash  String
+  resultJson   Json
+  createdAt    DateTime @default(now())
+  @@index([tool, createdAt])
+}
+
+model McpInvocation {
+  id            String @id @default(uuid())
+  operationId   String
+  tool          String
+  correlationId String
+  createdAt     DateTime @default(now())
+  @@index([tool, createdAt])
+  @@index([operationId])
+}

@@ -1,0 +1,6 @@
+{
+  "name": "@crashline/server", "private": true, "type": "module", "exports": "./src/index.ts",
+  "scripts": {"build": "tsc --noEmit", "typecheck": "tsc --noEmit"},
+  "dependencies": {"express": "5.1.0", "cors": "2.8.5", "express-rate-limit": "8.2.1", "zod": "3.25.76"},
+  "devDependencies": {"@types/express": "5.0.3", "@types/cors": "2.8.19"}
+}

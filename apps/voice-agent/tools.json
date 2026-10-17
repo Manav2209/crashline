@@ -1,0 +1,31 @@
+[
+  {
+    "name": "fetch_policy",
+    "path": "fetch-policy",
+    "description": "Read the policy assigned to this authenticated synthetic intake session. No coverage guarantee.",
+    "args": {"type": "object", "properties": {}, "required": []}
+  },
+  {
+    "name": "create_claim_draft",
+    "path": "create-claim-draft",
+    "description": "Save or update the customer's synthetic accident draft. Send all currently known fields. Null means unknown. Returns claimId and version; does not submit.",
+    "args": {
+      "type": "object", "description": "Customer-reported accident facts only.",
+      "properties": {
+        "incidentAt": {"type": ["string", "null"], "description": "ISO 8601 date/time with an explicit offset, or null if not known. Clarify timezone before submission."},
+        "location": {"type": ["string", "null"], "description": "Synthetic accident location, or null."},
+        "description": {"type": ["string", "null"], "description": "Customer narrative in their own words, or null."},
+        "injuryStatus": {"type": "string", "enum": ["none_reported", "reported", "unknown"], "description": "What the customer reported about injuries."},
+        "otherPartyInvolved": {"type": ["boolean", "null"], "description": "Whether another vehicle was reported, or null."},
+        "policeReportNumber": {"type": ["string", "null"], "description": "Synthetic report reference if supplied, otherwise null."}
+      },
+      "required": ["incidentAt", "location", "description", "injuryStatus", "otherPartyInvolved", "policeReportNumber"]
+    }
+  },
+  {
+    "name": "submit_accident_report",
+    "path": "submit-report",
+    "description": "Submit the latest saved draft ONLY after reading it back and receiving explicit customer confirmation. Use the latest saved version. Investigation runs asynchronously.",
+    "submission": true
+  }
+]

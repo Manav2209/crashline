@@ -1,0 +1,5 @@
+{
+  "name": "@crashline/api", "private": true, "type": "module",
+  "scripts": {"dev": "bun --env-file=../../.env --watch src/index.ts", "start": "bun --env-file=../../.env src/index.ts", "build": "tsc --noEmit", "typecheck": "tsc --noEmit"},
+  "dependencies": {"@crashline/contracts": "workspace:*", "@crashline/db": "workspace:*", "@crashline/server": "workspace:*", "express": "5.1.0", "zod": "3.25.76"}
+}

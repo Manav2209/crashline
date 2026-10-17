@@ -1,7 +1,7 @@
 {
-  "createdAt": "2026-10-17T02:29:28.291Z",
+  "createdAt": "2026-10-17T15:48:53.298Z",
   "source": "live ArmorIQ remote policy enforcement",
-  "operationId": "3e88db51-b77c-425f-ac27-50848454d15b",
+  "operationId": "fd8c8058-f344-4c0c-a9ad-42dd4c3e385a",
   "tool": "claims.approve_settlement",
   "transportAction": "claims__approve_settlement",
   "declaredInPlan": true,
@@ -9,7 +9,7 @@
   "enforcementSource": "ARMORIQ_POLICY",
   "reason": "ArmorIQ policy enforcement: Tool 'claims__approve_settlement' is not allowed by policy",
   "planHash": "66a07f77ad47928544a0c93501ef8428200ea8ada20605fe601bceffed952bbf",
-  "planId": "6d7d533a-7498-48fb-bfb6-1cac2fb816b3",
+  "planId": "f3ac41ad-dace-4e81-b0f6-a1f7153cc651",
   "executed": false,
   "handlerInvocations": 0,
   "settlementImplementation": "none; synthetic diagnostic only"

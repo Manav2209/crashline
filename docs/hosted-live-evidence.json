@@ -1,0 +1,81 @@
+{
+  "createdAt": "2026-10-17T15:50:02.749Z",
+  "source": "hosted HTTPS voice webhooks + ArmorIQ + cloud MCP + Neon worker",
+  "automatedSyntheticTest": true,
+  "actualSpokenCallStarted": false,
+  "claimId": "431dfe40-2111-42c1-abdc-8f4c3e026066",
+  "runId": "eb45bb01-7840-4d05-b419-f81f6081c299",
+  "reportId": "31342028-d4a5-4180-84d7-c0afd76e7cc2",
+  "status": "PENDING_HUMAN_REVIEW",
+  "partial": false,
+  "idempotentDraft": true,
+  "correctionVersioned": true,
+  "unconfirmedRejected": true,
+  "staleConfirmationRejected": true,
+  "httpsEventStream": true,
+  "allowed": [
+    {
+      "mcpTool": "claims.submit_fnol",
+      "agentType": "INTAKE",
+      "enforcementSource": "ARMORIQ_PROXY",
+      "armorPlanId": "890ef252-a680-4b4b-a8d2-e42ac2c3ae89",
+      "planHash": "d51522104af48c3c0c8c42eacc95fde4530d6c631aece338e43c0b08167003f2"
+    },
+    {
+      "mcpTool": "policy.get_details",
+      "agentType": "POLICY_AGENT",
+      "enforcementSource": "ARMORIQ_PROXY",
+      "armorPlanId": "880800ce-61a6-4e36-a14c-56e70863718f",
+      "planHash": "431d5d37f2b8646fee23279a5626b6f40b732086a75492708347d2f13c863a72"
+    },
+    {
+      "mcpTool": "claims.create_draft",
+      "agentType": "INTAKE",
+      "enforcementSource": "ARMORIQ_PROXY",
+      "armorPlanId": "8847f8d3-0cd7-4abc-bc62-7db3641c7b24",
+      "planHash": "fa5aad0774ae05255fa8e727c5b9e69269837bb72cf2dd261c98a49ecdd58cb0"
+    },
+    {
+      "mcpTool": "claims.create_draft",
+      "agentType": "INTAKE",
+      "enforcementSource": "ARMORIQ_PROXY",
+      "armorPlanId": "46e033bc-5cad-484e-a5ee-05d47199826e",
+      "planHash": "37a2e97e9b3ac543027deedb6e7ca1ba2551270cbaefa292810612eb61511005"
+    },
+    {
+      "mcpTool": "claims.create_draft",
+      "agentType": "INTAKE",
+      "enforcementSource": "ARMORIQ_PROXY",
+      "armorPlanId": "1963b2d1-f60b-4fb0-95ce-a543f64ee29f",
+      "planHash": "e20df7997afb81e0ea2f511b0da2f355690b588c3dbc58887855a14aa64343fa"
+    },
+    {
+      "mcpTool": "claims.get_details",
+      "agentType": "INVESTIGATOR",
+      "enforcementSource": "ARMORIQ_PROXY",
+      "armorPlanId": "4b860e23-f5bc-4478-ac63-31f410983773",
+      "planHash": "bc53e503a387ce8c40d312c0c6a5eb9263144451cd9a750f21588632f3cbe53c"
+    },
+    {
+      "mcpTool": "claims.get_intake_requirements",
+      "agentType": "INVESTIGATOR",
+      "enforcementSource": "ARMORIQ_PROXY",
+      "armorPlanId": "9c3f4565-3677-46df-a245-a359b59a74c4",
+      "planHash": "e1d432cac0327441fcc50f278eecd20f6c282220fa7062530685f7ed34134a31"
+    },
+    {
+      "mcpTool": "policy.get_coverage_rules",
+      "agentType": "POLICY_AGENT",
+      "enforcementSource": "ARMORIQ_PROXY",
+      "armorPlanId": "c79c8b08-f301-4a7f-80cc-1e1664424155",
+      "planHash": "3c848827167ee3d1091b128097646bbe66df1980a27f2003d6221ed449ec6d10"
+    },
+    {
+      "mcpTool": "claims.save_report",
+      "agentType": "ORCHESTRATOR",
+      "enforcementSource": "ARMORIQ_PROXY",
+      "armorPlanId": "c0ce9806-cc66-4a1f-9e93-ff902acf6bd4",
+      "planHash": "491c8490b43364aaf281ac936751c3e74c176a4d846d94f370baea79c8a7a342"
+    }
+  ]
+}

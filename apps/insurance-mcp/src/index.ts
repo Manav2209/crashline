@@ -15,4 +15,6 @@ app.post('/mcp', bearerAuth('MCP_ACCESS_TOKEN'), express.json({ limit: '128kb' }
 });
 app.all('/mcp', bearerAuth('MCP_ACCESS_TOKEN'), (_req, res) => res.status(405).json({ error: 'Use POST with Streamable HTTP.' }));
 app.use(errorHandler);
-app.listen(Number(process.env.MCP_PORT ?? 4002), '127.0.0.1', () => console.info('insurance-mcp http://127.0.0.1:4002/mcp'));
+const port = Number(process.env.PORT ?? process.env.MCP_PORT ?? 4002);
+const host = process.env.HOST ?? '127.0.0.1';
+app.listen(port, host, () => console.info(`insurance-mcp http://${host}:${port}/mcp`));

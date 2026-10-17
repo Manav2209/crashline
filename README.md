@@ -14,7 +14,20 @@ This is a prototype for collecting facts and preparing a preliminary report for 
 - Genuine TypeScript MCP server and `@armoriq/sdk` 0.6.10.
 - Every authored function must remain at or below 100 lines. Run `bun run check:functions`.
 
-No Git repository has been initialized, as requested.
+## Hosted demo
+
+Open [crashline.manv.blog](https://crashline.manv.blog) and enter the privately
+provided demo access token in Connection settings. The app runs on EC2 with
+Neon PostgreSQL and the ArmorIQ registration `insurance-mcp-cloud` at
+`https://crashline-mcp.manv.blog/mcp`.
+
+The hosted synthetic workflow passed draft replay, correction, current-version
+confirmation, both specialist reviews, all seven allowed tools, and HTTPS
+event streaming. A separate real remote-policy test blocked settlement approval
+with zero handler executions. See [hosted execution evidence](docs/hosted-live-evidence.json),
+[policy denial evidence](docs/live-policy-block-evidence.json), and
+[cloud deployment](docs/cloud-deployment.md). A real spoken call and submission
+recording still need to be completed.
 
 ## Local setup
 
@@ -53,7 +66,7 @@ On Windows, stop running Prisma consumers before regenerating the client after a
 
 There is one synthetic account, DEMO-001 / Alex Morgan, and one connected policy, POL-1001. Ownership is resolved by the server. Saying a different identity or policy number cannot change that binding.
 
-The local Vite development proxy supplies the configured demo operator token to the API on behalf of the local workspace. This is a convenience for local synthetic testing, not production authentication. A separately hosted frontend must supply an authorized access token and needs a proper deployment authentication design.
+The local Vite development proxy supplies the configured demo operator token to the API on behalf of the local workspace. The hosted demo prompts for that token in Connection settings; it is not baked into the frontend bundle. This prototype uses a shared synthetic workspace; production identity would require separate operator accounts.
 
 ElevenLabs tools require both their configured provider bearer secret and a short-lived session capability. The capability is scoped to the synthetic account/policy, visible to that user's browser, and passed to ElevenLabs as a secret dynamic variable. It is not the provider API key or an internal service credential.
 

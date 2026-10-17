@@ -1,0 +1,70 @@
+name: crashline
+x-app: &app
+  image: crashline:demo
+  build: .
+  env_file: .env.cloud
+  restart: unless-stopped
+  init: true
+  environment: &environment
+    HOST: 0.0.0.0
+    DATABASE_URL: ${DATABASE_URL:?Set Neon pooled DATABASE_URL}
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+services:
+  migrate:
+    <<: *app
+    restart: "no"
+    command: [sh, -c, "bun run db:deploy && bun run db:seed"]
+    environment:
+      <<: *environment
+      DATABASE_URL: ${MIGRATION_DATABASE_URL:?Set Neon direct MIGRATION_DATABASE_URL}
+  api:
+    <<: *app
+    environment:
+      <<: *environment
+      PORT: 4000
+      TRUST_PROXY_HOPS: 1
+      WEB_DIST_PATH: /app/apps/web/dist
+      ORCHESTRATOR_URL: http://orchestrator:4001
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      orchestrator:
+        condition: service_started
+  orchestrator:
+    <<: *app
+    command: [bun, apps/orchestrator/src/index.ts]
+    environment:
+      <<: *environment
+      PORT: 4001
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  mcp:
+    <<: *app
+    command: [bun, apps/insurance-mcp/src/index.ts]
+    environment:
+      <<: *environment
+      PORT: 4002
+      TRUST_PROXY_HOPS: 1
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      APP_DOMAIN: crashline.manv.blog
+      MCP_DOMAIN: crashline-mcp.manv.blog
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on: [api, mcp]
+volumes:
+  caddy_data:
+  caddy_config:

@@ -42,7 +42,7 @@ export const errorHandler: ErrorRequestHandler = (error, req, res, _next) => {
 export function createApp(publicApi = false) {
   const app = express();
   app.disable('x-powered-by');
-  app.set('trust proxy', 'loopback');
+  app.set('trust proxy', process.env.TRUST_PROXY_HOPS ? Number(process.env.TRUST_PROXY_HOPS) : 'loopback');
   app.use((_req, res, next) => {
     res.locals.correlationId = crypto.randomUUID();
     res.setHeader('X-Correlation-ID', res.locals.correlationId);

@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/.turbo
+**/.env
+**/.env.*
+**/.voice-state.json
+**/*.log
+.git
+.tools
+output
+coverage
+**/generated

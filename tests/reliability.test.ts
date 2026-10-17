@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, test } from 'bun:test';
-import { ArmorIQClient, IntentMismatchException, type IntentToken } from '../apps/orchestrator/node_modules/@armoriq/sdk';
+import { ArmorIQClient, IntentMismatchException, MCPInvocationException, PolicyBlockedException, type IntentToken } from '../apps/orchestrator/node_modules/@armoriq/sdk';
 import { db } from '../packages/db/src';
 import { executeTool } from '../apps/insurance-mcp/src/services/tools';
 import { invokeTool } from '../apps/orchestrator/src/services/gateway';
@@ -20,6 +20,7 @@ suite('reliability checks using local synthetic fixtures', () => {
   registerMutationChecks();
   registerLeaseChecks();
   registerGatewayChecks();
+  registerTransportChecks();
   registerSessionChecks();
 });
 function registerSessionChecks() {
@@ -96,6 +97,41 @@ function registerLeaseChecks() {
     const args = signedArgs(ctx, 'claims.save_report', report);
     expect(await executeTool('claims.save_report', args)).toEqual(await executeTool('claims.save_report', args));
     expect((await db.investigationRun.findUniqueOrThrow({ where: { id: run!.id } })).status).toBe('PARTIAL');
+  });
+}
+function registerTransportChecks() {
+  test('a proxy 500 after mutation retries identical authority without duplicating the draft', async () => {
+    const { ctx, draft, claimId } = await fixture();
+    let calls = 0;
+    let firstArgs: Parameters<ArmorIQClient['invoke']>[3];
+    let firstToken: IntentToken | undefined;
+    const port = fakePort(async (mcp, action, token, args) => {
+      calls++;
+      if (calls === 1) { firstArgs = args; firstToken = token; }
+      else { expect(args).toBe(firstArgs); expect(token).toBe(firstToken!); }
+      const result = await executeTool('claims.create_draft', args!);
+      if (calls === 1) throw new MCPInvocationException('Synthetic proxy response failure after commit.', mcp, action, 500);
+      return { mcp, action, verified: true, status: 'success', result, metadata: {} };
+    });
+    await invokeTool(ctx, 'claims.create_draft', draft, port);
+    expect(calls).toBe(2);
+    expect((await db.claim.findUniqueOrThrow({ where: { id: claimId } })).version).toBe(2);
+    expect(await db.toolExecution.count({ where: { operationId: ctx.operationId } })).toBe(1);
+  });
+  test('persistent proxy errors stop after one retry and stay unavailable', async () => {
+    const { ctx } = await fixture();
+    let calls = 0;
+    const port = fakePort(async (mcp, action) => { calls++; throw new MCPInvocationException('Synthetic proxy 503.', mcp, action, 503); });
+    await expect(invokeTool(ctx, 'policy.get_details', {}, port)).rejects.toThrow('enforcement_unavailable');
+    expect(calls).toBe(2);
+    expect((await db.toolAttempt.findFirstOrThrow({ where: { operationId: ctx.operationId } })).decision).toBe('UNAVAILABLE');
+  });
+  test('policy blocks stop immediately without a transport retry', async () => {
+    const { ctx } = await fixture();
+    let calls = 0;
+    const port = fakePort(async () => { calls++; throw new PolicyBlockedException('Synthetic policy denial.'); });
+    await expect(invokeTool(ctx, 'policy.get_details', {}, port)).rejects.toThrow('policy enforcement');
+    expect(calls).toBe(1);
   });
 }
 function registerGatewayChecks() {

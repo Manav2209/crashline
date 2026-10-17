@@ -22,5 +22,7 @@ internal.get('/runs/:id', async (req, res) => {
 app.use('/internal', internal);
 app.use(errorHandler);
 const stopWorker = startWorker();
-const server = app.listen(Number(process.env.ORCHESTRATOR_PORT ?? 4001), '127.0.0.1', () => console.info('orchestrator http://127.0.0.1:4001'));
+const port = Number(process.env.PORT ?? process.env.ORCHESTRATOR_PORT ?? 4001);
+const host = process.env.HOST ?? '127.0.0.1';
+const server = app.listen(port, host, () => console.info(`orchestrator http://${host}:${port}`));
 process.on('SIGTERM', () => { stopWorker(); server.close(); void db.$disconnect(); });

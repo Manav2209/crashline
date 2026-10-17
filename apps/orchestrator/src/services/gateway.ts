@@ -3,6 +3,7 @@ import { toolSchemas, type ExecutionContext, type ToolName } from '@crashline/co
 import { db, Prisma } from '@crashline/db';
 import { executionFingerprint, Problem } from '@crashline/server';
 import { createArmorClient, createAuthority, type ArmorPort } from './authority';
+import { invokeWithTransportRetry } from './transport';
 
 type Outcome = {
   decision: string; reason: string; enforcementSource: string; resultStatus: string;
@@ -56,7 +57,7 @@ export async function invokeTool(ctx: ExecutionContext, tool: ToolName, input: u
     const client = port ?? createArmorClient(ctx.userEmail);
     const authority = await createAuthority(client, ctx, tool, args);
     token = authority.token;
-    const response = await client.invoke(authority.mcp, authority.action, token, authority.params, undefined, ctx.userEmail);
+    const response = await invokeWithTransportRetry(client, authority.mcp, authority.action, token, authority.params, undefined, ctx.userEmail);
     if (!response.verified) throw new Problem(502, 'unverified_execution', 'The provider did not verify the call.');
     outcome.decision = 'ALLOW';
     outcome.enforcementSource = 'ARMORIQ_PROXY';

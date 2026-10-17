@@ -6,6 +6,7 @@ import { sessionsRouter } from './routers/sessions';
 import { postCallRouter, voiceRouter } from './routers/voice';
 import { streamEvents } from './services/events';
 import { voiceReady } from './services/configuration';
+import { serveWeb } from './services/web';
 
 export function createApi() {
   const app = createApp(true);
@@ -25,6 +26,7 @@ export function createApi() {
   }));
   app.use('/api/intake/sessions', sessionsRouter);
   app.use('/api', claimsRouter);
+  serveWeb(app);
   app.use((_req, res) => res.status(404).json({ ok: false, code: 'not_found', message: 'Route not found.' }));
   app.use(errorHandler);
   return app;
